@@ -8,30 +8,70 @@
 
     <style type="text/css">
         nav{
-            background-color:#47bdec;
+            background-color:#24e6d5e7;
+            display: inline-flex;
         }
-        nav a{
-            display:inline-block;
-            padding:10px;
-            font-size:20px;
-            color:white;
-            text-decoration:none;
+        .menu {
+            background: #24e6d5e7;
+            height: 40px
         }
-        nav a:hover{
-            background-color:#333;
+        .menu li{
+            float: left; 
+            list-style: none; 
+            margin-right: 10px; 
+            width: 140px;
         }
+        .menu li:hover {
+            background: white
+        }
+        .menu li a{
+            color: black;
+            text-decoration: none;
+            font-size: 20px;
+        }
+        .menu li ul li{
+            display:none;
+             width: 100px ;
+             margin-top: 10px
+            }
+        .menu li:hover ul li{
+            display: block
+        }
+
     </style>
 </head>
 <body>
-    <div id="rendering", class="w-100 h-100 position-fixed">
+    <div id='rendering'>
+        <nav style="position: fixed;">
+            <a style= "font-size: 30px;">CS105.M11.KHCL</a>
+            <div class="menu">
+                <ul>
+                    <li>
+                        <a href="#">Bề mặt</a>
+                        <ul>
+                            <li><a href="#" onclick="SetMaterial(1)">Point</a></li>
+                            <li><a href="#" onclick="SetMaterial(2)">Line</a></li>
+                            <li><a href="#" onclick="SetMaterial(3)">Solid</a></li>
+                        </ul>
+                    </li>
+                    <li>
+                        <a href="#">Affine</a>
+                        <ul>
+                            <li><a href="#" onclick="Translate()">Translate</a></li>
+                            <li><a href="#" onclick="Rotate()">Rotate</a></li>
+                            <li><a href="#" onclick="Scale()">Scale</a></li>
+                        </ul>
+                    </li>
+                </ul>
+                </div>
+        </nav>
     </div>
-    <nav>
-        <a href="http://webcoban.vn/html/default.html">HTML</a>
-        <a href="http://webcoban.vn/css/default.html">CSS</a>
-        <a href="http://webcoban.vn/javascript/default.html">JavaScript</a>
-        <a href="http://webcoban.vn/mysql/default.html">MySQL</a>
-        <a href="http://webcoban.vn/php/default.html">PHP</a>
-    </nav>
+
+
     <script type="module" src="./index.js"></script>
+    <script>
+        
+    </script>
+    
 </body>
 </html>

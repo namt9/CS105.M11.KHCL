@@ -1,7 +1,10 @@
+// Import lib
 import * as THREE from './js/three.module.js';
 import { OrbitControls } from './js/OrbitControls.js';
 import { TransformControls } from './js/TransformControls.js';
+import { TeapotBufferGeometry } from './js/TeapotBufferGeometry.js';
 
+// Init variable
 var camera, scene, renderer, control, orbit;
 var mesh, texture;
 var raycaster, light, PointLightHelper, meshplan;
@@ -24,7 +27,7 @@ var SphereGeometry = new THREE.SphereGeometry(20, 20, 20);
 var ConeGeometry = new THREE.ConeGeometry(18, 30, 32, 20);
 var CylinderGeometry = new THREE.CylinderGeometry(20, 20, 40, 30, 5);
 var TorusGeometry = new THREE.TorusGeometry(20, 5, 20, 100);
-//var TeapotGeometry = new TeapotBufferGeometry(20, 8);
+var TeapotGeometry = new TeapotBufferGeometry(20, 8);
 var DodecahedronGeometry = new THREE.DodecahedronBufferGeometry(25);
 var IcosahedronGeometry = new THREE.IcosahedronBufferGeometry(25);
 var OctahedronGeometry =  new THREE.OctahedronBufferGeometry(25);
@@ -55,7 +58,7 @@ function init() {
 	scene.add(gridHelper);
 	
     // Renderer
-    raycaster = new THREE.Raycaster(); 
+    raycaster = new THREE.Raycaster();
     renderer = new THREE.WebGLRenderer({antialias: true})
     renderer.setSize( window.innerWidth, window.innerHeight )
     renderer.shadowMap.enabled = true;
@@ -84,7 +87,111 @@ function render() {
 	renderer.render(scene, camera);
 }
 
+function boxdefault(){
 
+	mesh = new THREE.Mesh(BoxGeometry, material);
+	mesh.castShadow = true;
+	mesh.receiveShadow = true;
+	mesh.name = "mesh1"
+	scene.add(mesh);
+	control.attach(mesh);
+	scene.add(control);
+	render();
+}
+boxdefault();
+
+function CloneMesh(dummy_mesh) {
+	mesh.name = dummy_mesh.name;
+	mesh.position.set(dummy_mesh.position.x, dummy_mesh.position.y, dummy_mesh.position.z);
+	mesh.rotation.set(dummy_mesh.rotation.x, dummy_mesh.rotation.y, dummy_mesh.rotation.z);
+	mesh.scale.set(dummy_mesh.scale.x, dummy_mesh.scale.y, dummy_mesh.scale.z);
+	mesh.castShadow = true;
+	mesh.receiveShadow = true;
+	scene.add(mesh);
+	control.attach(mesh);
+	scene.add(control);
+}	
+function SetMaterial(mat, color) {
+	mesh = scene.getObjectByName("mesh1");
+	light = scene.getObjectByName("pl1");
+	if (mat != 0) {
+		type_material = mat;
+	}
+	
+	 if (color) {
+	 	color_material = color;
+	 }
+
+
+	if (mesh) {
+		const dummy_mesh = mesh.clone();
+		scene.remove(mesh);
+
+		switch (type_material) {
+			case 1:
+				material = new THREE.PointsMaterial({ color: color_material, size: 0.3 });
+				mesh = new THREE.Points(dummy_mesh.geometry, material);
+				CloneMesh(dummy_mesh);
+				break;
+			case 2:
+				material = new THREE.MeshBasicMaterial({ color: color_material, wireframe: true });
+				mesh = new THREE.Mesh(dummy_mesh.geometry, material);
+				CloneMesh(dummy_mesh);
+				break;
+			case 3:
+				if (!light)
+					material = new THREE.MeshBasicMaterial({ color: color_material });
+				else
+				 	material = new THREE.MeshPhongMaterial({ color: mesh.material.color_material });
+				mesh = new THREE.Mesh(dummy_mesh.geometry, material);
+				CloneMesh(dummy_mesh);
+				break;
+			case 4:
+				if (!light)
+					material = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
+				else
+					material = new THREE.MeshLambertMaterial({ map: texture, transparent: true });
+				mesh = new THREE.Mesh(dummy_mesh.geometry, material);
+				CloneMesh(dummy_mesh);
+				break;
+		}
+		render();
+	}
+}
+window.SetMaterial = SetMaterial
+
+
+// 3. Affine
+function Translate() {
+	control.setMode("translate");
+}
+window.Translate = Translate;
+
+function Rotate() {
+	control.setMode("rotate");
+}
+window.Rotate = Rotate;
+
+function Scale() {
+	control.setMode("scale");
+}
+window.Scale = Scale;
+
+// Control onKeydown
+function control_transform(mesh) {
+	control.attach(mesh);
+	scene.add(control);
+	window.addEventListener('keydown', function (event) {
+		switch (event.keyCode) {
+			case 84: // T
+				Translate(); break;
+			case 82: // R
+				Rotate(); break;
+			case 83: // S
+				Scale(); break;
+		}
+	});
+}
 
 function onMouseDown(event) {
 	event.preventDefault();
