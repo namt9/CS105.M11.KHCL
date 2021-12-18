@@ -1,4 +1,3 @@
-// Import lib
 import * as THREE from './js/three.module.js';
 import { OrbitControls } from './js/OrbitControls.js';
 import { TransformControls } from './js/TransformControls.js';
@@ -184,11 +183,14 @@ function control_transform(mesh) {
 	window.addEventListener('keydown', function (event) {
 		switch (event.keyCode) {
 			case 84: // T
-				Translate(); break;
+				Translate(); 
+				break;
 			case 82: // R
-				Rotate(); break;
+				Rotate(); 
+				break;
 			case 83: // S
-				Scale(); break;
+				Scale(); 
+				break;
 		}
 	});
 }
