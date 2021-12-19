@@ -1,3 +1,4 @@
+// Import lib
 import * as THREE from './js/three.module.js';
 import { OrbitControls } from './js/OrbitControls.js';
 import { TransformControls } from './js/TransformControls.js';
@@ -54,51 +55,40 @@ function init() {
     var size = 400;
     var divisions = 50;
     var gridHelper = new THREE.GridHelper(size, divisions, 0x888888);
-	scene.add(gridHelper);
+		scene.add(gridHelper);
 	
     // Renderer
     raycaster = new THREE.Raycaster();
     renderer = new THREE.WebGLRenderer({antialias: true})
     renderer.setSize( window.innerWidth, window.innerHeight )
     renderer.shadowMap.enabled = true;
-	renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-	document.getElementById("rendering").addEventListener('mousedown', onMouseDown, false);
-	document.getElementById("rendering").appendChild(renderer.domElement);
-	window.addEventListener('resize', () => {
-		var width = window.innerWidth
-		var height = window.innerHeight
-		renderer.setSize(width, height)
-		camera.aspect = width / height
-		camera.updateProjectionMatrix()
-		render()
-	})
-	orbit = new OrbitControls(camera, renderer.domElement);
-	orbit.update();
-	orbit.addEventListener('change', render);
-	control = new TransformControls(camera, renderer.domElement);
-	control.addEventListener('change', render);
-	control.addEventListener('dragging-changed', function (event) {
-		orbit.enabled = !event.value;
-	});
+		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+		document.getElementById("rendering").addEventListener('mousedown', onMouseDown, false);
+		document.getElementById("rendering").appendChild(renderer.domElement);
+		window.addEventListener('resize', () => {
+			var width = window.innerWidth
+			var height = window.innerHeight
+			renderer.setSize(width, height)
+			camera.aspect = width / height
+			camera.updateProjectionMatrix()
+			render()
+		})
+		orbit = new OrbitControls(camera, renderer.domElement);
+		orbit.update();
+		orbit.addEventListener('change', render);
+		control = new TransformControls(camera, renderer.domElement);
+		control.addEventListener('change', render);
+		control.addEventListener('dragging-changed', function (event) {
+			orbit.enabled = !event.value;
+		});
 }
 
 function render() {
 	renderer.render(scene, camera);
 }
 
-function boxdefault(){
 
-	mesh = new THREE.Mesh(BoxGeometry, material);
-	mesh.castShadow = true;
-	mesh.receiveShadow = true;
-	mesh.name = "mesh1"
-	scene.add(mesh);
-	control.attach(mesh);
-	scene.add(control);
-	render();
-}
-boxdefault();
-
+// 2 Các khối hình sẽ được vẽ theo Point/Lines/Solid
 function CloneMesh(dummy_mesh) {
 	mesh.name = dummy_mesh.name;
 	mesh.position.set(dummy_mesh.position.x, dummy_mesh.position.y, dummy_mesh.position.z);
@@ -117,9 +107,9 @@ function SetMaterial(mat, color) {
 		type_material = mat;
 	}
 	
-	 if (color) {
+	if (color) {
 	 	color_material = color;
-	 }
+	}
 
 
 	if (mesh) {
@@ -159,8 +149,84 @@ function SetMaterial(mat, color) {
 }
 window.SetMaterial = SetMaterial
 
+// 1 Vẽ các khối hình
+function RenderGeo(id) {
+	mesh = scene.getObjectByName("mesh1");
+	scene.remove(mesh);
 
-// 3. Affine
+	switch (id) {
+		case 1:
+			mesh = new THREE.Mesh(BoxGeometry, material);
+			break;
+		case 2:
+			mesh = new THREE.Mesh(SphereGeometry, material);
+			break;
+		case 3:
+			mesh = new THREE.Mesh(ConeGeometry, material);
+			break;
+		case 4:
+			mesh = new THREE.Mesh(CylinderGeometry, material);
+			break;
+		case 5:
+			mesh = new THREE.Mesh(TorusGeometry, material);
+			break;
+		case 6:
+			mesh = new THREE.Mesh(TeapotGeometry, material);
+			break;
+		case 7:
+			mesh = new THREE.Mesh(IcosahedronGeometry, material);
+			break;
+		case 8:
+			mesh = new THREE.Mesh(DodecahedronGeometry, material);
+			break;
+		case 9:
+			mesh = new THREE.Mesh(OctahedronGeometry, material);
+			break;
+		case 10:
+			mesh = new THREE.Mesh(TetrahedronGeometry, material);
+			break;
+		case 11:
+			mesh = new THREE.Mesh(LatheGeometry, material);
+			break;
+		case 12:
+			mesh = new THREE.Mesh(TorusKnotGeometry, material);
+			break;
+		
+	}
+    mesh.name = "mesh1";
+    mesh.castShadow = true;
+		mesh.receiveShadow = true;
+		scene.add(mesh);
+		control_transform(mesh);
+		render();
+}
+window.RenderGeo = RenderGeo;
+
+
+
+// 3. Thực hiện chiếu phối cảnh, tăng giảm các toạ độ x,y,z near, far
+function setFOV(value) {
+	camera.fov = Number(value);
+	camera.updateProjectionMatrix();
+	render();
+}
+window.setFOV = setFOV;
+
+function setFar(value) {
+	camera.far = Number(value);
+	camera.updateProjectionMatrix();
+	render();
+}
+window.setFar = setFar;
+
+function setNear(value) {
+	camera.near = Number(value);
+	camera.updateProjectionMatrix();
+	render();
+}
+window.setNear = setNear;
+
+// 4. Affine
 function Translate() {
 	control.setMode("translate");
 }
@@ -183,14 +249,11 @@ function control_transform(mesh) {
 	window.addEventListener('keydown', function (event) {
 		switch (event.keyCode) {
 			case 84: // T
-				Translate(); 
-				break;
+				Translate(); break;
 			case 82: // R
-				Rotate(); 
-				break;
+				Rotate(); break;
 			case 83: // S
-				Scale(); 
-				break;
+				Scale(); break;
 		}
 	});
 }
