@@ -6,136 +6,126 @@
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 
-    <style type="text/css">
-        nav{
-            background-color:#24e6d5e7;
-            display: inline-flex;
-        }
-        .menu {
-            background: #24e6d5e7;
-            height: 40px
-        }
-        .menu li{
-            float: left; 
-            list-style: none; 
-            margin-right: 10px; 
-            width: 140px;
-        }
-        .menu li:hover {
-            background: white
-        }
-        .menu li a{
-            color: black;
-            text-decoration: none;
-            font-size: 20px;
-        }
-        .menu li ul li{
-            display:none;
-             width: 100px ;
-             margin-top: 10px
-            }
-        .menu li:hover ul li{
-            display: block
-        }
+	<link href="./css/style.css">
 
-        
-    </style>
+	<style type="text/css">
+		nav{
+			background-color:#24e6d5e7;
+			display: inline-flex;
+		}
+		.menu {
+			background: #24e6d5e7;
+			height: 40px
+		}
+		.menu li{
+			float: left; 
+			list-style: none; 
+			margin-right: 10px; 
+			width: 140px;
+		}
+		.menu li:hover {
+			background: white
+		}
+		.menu li a{
+			color: black;
+			text-decoration: none;
+			font-size: 20px;
+		}
+		.menu li ul li{
+			display:none;
+			 width: 100px ;
+			 margin-top: 10px
+			}
+		.menu li:hover ul li{
+			display: block
+		}
+
+		
+	</style>
 
 </head>
 <body>
-    <div id='rendering'>
-        <nav style="position: fixed;">
-            <a style= "font-size: 30px;">CS105.M11.KHCL</a>
+	<div id='rendering'>
+		<nav style="position: fixed;">
+			<a style= "font-size: 30px;">CS105.M11.KHCL</a>
 
-            <div class="menu">
-                <ul>
-                    <li>
-                        <a href="#">Khối hình</a>
-                        <ul>
-                            <li><a href="#" onclick="RenderGeo(1);">Cube</a></li>
-                            <li><a href="#" onclick="RenderGeo(2);">Sphere</a></li>
-                            <li><a href="#" onclick="RenderGeo(3);">Cone</a></li>
-                            <li><a href="#" onclick="RenderGeo(4);">Cylinder</a></li>
-                            <li><a href="#" onclick="RenderGeo(5);">Torus</a></li>                            <li><a href="#" onclick="RenderGeo(6);">Teapot</a></li>
-                            <li><a href="#" onclick="RenderGeo(7);">Icosahedron</a></li>
-                            <li><a href="#" onclick="RenderGeo(8);">Dodecahedron</a></li>
-                            <li><a href="#" onclick="RenderGeo(9);">Octahedron</a></li>
-                            <li><a href="#" onclick="RenderGeo(10);">Tetrahedron</a></li>
-                            <li><a href="#" onclick="RenderGeo(11);">Lathe</a></li>
-                            <li><a href="#" onclick="RenderGeo(12);">TorusKnot</a></li>
+			<div class="menu">
+				<ul>
+					<li>
+						<a href="#">Khối hình</a>
+						<ul>
+							<li><a href="#" onclick="RenderGeo(1);">Cube</a></li>
+							<li><a href="#" onclick="RenderGeo(2);">Sphere</a></li>
+							<li><a href="#" onclick="RenderGeo(3);">Cone</a></li>
+							<li><a href="#" onclick="RenderGeo(4);">Cylinder</a></li>
+							<li><a href="#" onclick="RenderGeo(5);">Torus</a></li>                            <li><a href="#" onclick="RenderGeo(6);">Teapot</a></li>
+							<li><a href="#" onclick="RenderGeo(7);">Icosahedron</a></li>
+							<li><a href="#" onclick="RenderGeo(8);">Dodecahedron</a></li>
+							<li><a href="#" onclick="RenderGeo(9);">Octahedron</a></li>
+							<li><a href="#" onclick="RenderGeo(10);">Tetrahedron</a></li>
+							<li><a href="#" onclick="RenderGeo(11);">Lathe</a></li>
+							<li><a href="#" onclick="RenderGeo(12);">TorusKnot</a></li>
 
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#">Bề mặt</a>
-                        <ul>
-                            <li><a href="#" onclick="SetMaterial(1)">Point</a></li>
-                            <li><a href="#" onclick="SetMaterial(2)">Line</a></li>
-                            <li><a href="#" onclick="SetMaterial(3)">Solid</a></li>
-                        </ul>
-                    </li>
-                    <li>
-                        <a href="#">Affine</a>
-                        <ul>
-                            <li><a href="#" onclick="Translate()">Translate</a></li>
-                            <li><a href="#" onclick="Rotate()">Rotate</a></li>
-                            <li><a href="#" onclick="Scale()">Scale</a></li>
-                        </ul>
-                    </li>
-                </ul>
-            </div>
-        </nav>
-    </div>
+						</ul>
+					</li>
+					<li>
+						<a href="#">Bề mặt</a>
+						<ul>
+							<li><a href="#" onclick="SetMaterial(1)">Point</a></li>
+							<li><a href="#" onclick="SetMaterial(2)">Line</a></li>
+							<li><a href="#" onclick="SetMaterial(3)">Solid</a></li>
+						</ul>
+					</li>
+					<li>
+						<a href="#">Affine</a>
+						<ul>
+							<li><a href="#" onclick="Translate()">Translate</a></li>
+							<li><a href="#" onclick="Rotate()">Rotate</a></li>
+							<li><a href="#" onclick="Scale()">Scale</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+		</nav>
+	</div>
 
-    <!-- :(( chua duoc 
-    <div id="content">
-        <nav style="position: fixed;">
-// class = ???
-            <div style="position: fixed; left: 1500px; bottom: 700px;">
-                <div style="max-width: 15rem;"></div>
-                    <div style="color: tomato; font-weight: bold;">CONTROL PANNEL</div>
-                    <div> -->
+	<!--Phep chieu: FOV, Far, Near-->
+	<div id="content">
+		<nav style="position: fixed;">
+			<div class="ctrlpannel" style="position: fixed; left: 1500px; bottom: 700px;">
+				<div class="mr-auto card bg-light" style="max-width: 15rem;">
+					<div class="card-header" style="color: tomato; font-weight: bold;">CONTROL PANNEL</div>
+					<div class="card-body">
+						<div>
+							<span class="mr-auto valueSpanFOV"></span>
+							<input type="range" class="custom-range" id="customFOV" min="0" max="180" value="90">
+						</div>
 
-                        <!-- <label for="customFOV">Field of View</label> -->
-                        <!--
-                        <div>
-                            <span class="valueSpanFOV"></span>
-                            <input type="range" class="custom-range" id="customFOV" min="0" max="180" value="75">
-                        </div> -->
+						<div>
+							<span class="mr-auto valueSpanNear"></span>
+							<input type="range" class="custom-range" id="customNear" min="0.1" max="100" value="0.1">
+						</div>
+									
+						<div>
+							<span class="mr-auto valueSpanFar"></span>
+							<input type="range" class="custom-range" id="customFar" min="200" max="2000" value="1000">
+						</div>
+					</div>
+				</div>
+			</div>
+		</nav>
+	</div>
 
-                        <!-- <label for="customRange1">Near</label> -->
-                        <!--
-                        <div>
-                            <span class="valueSpanNear"></span>
-                            <input type="range" class="custom-range" id="customNear" min="0.1" max="100" value="0.1">
-                        </div> -->
-                        <!-- <label for="customRange2">Far</label> -->
-                        <!--
-                        <div>
-                            <span class="valueSpanFar"></span>
-                            <input type="range" class="custom-range" id="customFar" min="200" max="2000" value="1000">
-                        </div>
-                    </div>
-                
-            </div>
-        </nav>
-    </div>
-
- -->
-
-
-    <script src="js/jquery.min.js"></script>
+	<script src="js/jquery.min.js"></script>
 	<script src="js/bootstrap.min.js"></script>
 	<script src="js/main.js"></script>
-    <script type="module" src="./index.js"></script>
-    <script src="js/bootstrap-colorpicker.js"></script>
+	<script type="module" src="./index.js"></script>
+	<script src="js/bootstrap-colorpicker.js"></script>
 
 
 
-    <script>
+	<script>
 
-        // nam mô bổn sư thích ca mâu ni phật
-        /*
 		$(document).ready(function () {
 			const $valueSpanFOV = $('.valueSpanFOV');
 			const $valueSpanNear = $('.valueSpanNear');
@@ -145,7 +135,7 @@
 			const $valueNear = $('#customNear');
 			const $valueFar = $('#customFar');
 
-            $valueSpanFOV.html("Field of View: " + $valueFOV.val());
+			$valueSpanFOV.html("Field of View: " + $valueFOV.val());
 			$valueFOV.on('input change', () => {
 				$valueSpanFOV.html("Field of View: " + $valueFOV.val());
 				setNear($valueFOV.val());
@@ -164,9 +154,9 @@
 				setFar($valueFar.val());
 			});
 		});
-        */
-    </script>
-    
+		
+	</script>
+	
 </body>
 
 </html>
