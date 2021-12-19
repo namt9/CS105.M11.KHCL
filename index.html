@@ -38,14 +38,34 @@
             display: block
         }
 
+        
     </style>
+
 </head>
 <body>
     <div id='rendering'>
         <nav style="position: fixed;">
             <a style= "font-size: 30px;">CS105.M11.KHCL</a>
+
             <div class="menu">
                 <ul>
+                    <li>
+                        <a href="#">Khối hình</a>
+                        <ul>
+                            <li><a href="#" onclick="RenderGeo(1);">Cube</a></li>
+                            <li><a href="#" onclick="RenderGeo(2);">Sphere</a></li>
+                            <li><a href="#" onclick="RenderGeo(3);">Cone</a></li>
+                            <li><a href="#" onclick="RenderGeo(4);">Cylinder</a></li>
+                            <li><a href="#" onclick="RenderGeo(5);">Torus</a></li>                            <li><a href="#" onclick="RenderGeo(6);">Teapot</a></li>
+                            <li><a href="#" onclick="RenderGeo(7);">Icosahedron</a></li>
+                            <li><a href="#" onclick="RenderGeo(8);">Dodecahedron</a></li>
+                            <li><a href="#" onclick="RenderGeo(9);">Octahedron</a></li>
+                            <li><a href="#" onclick="RenderGeo(10);">Tetrahedron</a></li>
+                            <li><a href="#" onclick="RenderGeo(11);">Lathe</a></li>
+                            <li><a href="#" onclick="RenderGeo(12);">TorusKnot</a></li>
+
+                        </ul>
+                    </li>
                     <li>
                         <a href="#">Bề mặt</a>
                         <ul>
@@ -63,15 +83,90 @@
                         </ul>
                     </li>
                 </ul>
-                </div>
+            </div>
         </nav>
     </div>
 
+    <!-- :(( chua duoc 
+    <div id="content">
+        <nav style="position: fixed;">
+// class = ???
+            <div style="position: fixed; left: 1500px; bottom: 700px;">
+                <div style="max-width: 15rem;"></div>
+                    <div style="color: tomato; font-weight: bold;">CONTROL PANNEL</div>
+                    <div> -->
 
+                        <!-- <label for="customFOV">Field of View</label> -->
+                        <!--
+                        <div>
+                            <span class="valueSpanFOV"></span>
+                            <input type="range" class="custom-range" id="customFOV" min="0" max="180" value="75">
+                        </div> -->
+
+                        <!-- <label for="customRange1">Near</label> -->
+                        <!--
+                        <div>
+                            <span class="valueSpanNear"></span>
+                            <input type="range" class="custom-range" id="customNear" min="0.1" max="100" value="0.1">
+                        </div> -->
+                        <!-- <label for="customRange2">Far</label> -->
+                        <!--
+                        <div>
+                            <span class="valueSpanFar"></span>
+                            <input type="range" class="custom-range" id="customFar" min="200" max="2000" value="1000">
+                        </div>
+                    </div>
+                
+            </div>
+        </nav>
+    </div>
+
+ -->
+
+
+    <script src="js/jquery.min.js"></script>
+	<script src="js/bootstrap.min.js"></script>
+	<script src="js/main.js"></script>
     <script type="module" src="./index.js"></script>
+    <script src="js/bootstrap-colorpicker.js"></script>
+
+
+
     <script>
-        
+
+        // nam mô bổn sư thích ca mâu ni phật
+        /*
+		$(document).ready(function () {
+			const $valueSpanFOV = $('.valueSpanFOV');
+			const $valueSpanNear = $('.valueSpanNear');
+			const $valueSpanFar = $('.valueSpanFar');
+
+			const $valueFOV = $('#customFOV');
+			const $valueNear = $('#customNear');
+			const $valueFar = $('#customFar');
+
+            $valueSpanFOV.html("Field of View: " + $valueFOV.val());
+			$valueFOV.on('input change', () => {
+				$valueSpanFOV.html("Field of View: " + $valueFOV.val());
+				setNear($valueFOV.val());
+			});
+
+
+			$valueSpanNear.html("Near: " + $valueNear.val());
+			$valueNear.on('input change', () => {
+				$valueSpanNear.html("Near: " + $valueNear.val());
+				setNear($valueNear.val());
+			});
+
+			$valueSpanFar.html("Far: " + $valueFar.val());
+			$valueFar.on('input change', () => {
+				$valueSpanFar.html("Far: " + $valueFar.val());
+				setFar($valueFar.val());
+			});
+		});
+        */
     </script>
     
 </body>
+
 </html>
