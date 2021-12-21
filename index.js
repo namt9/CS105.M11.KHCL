@@ -6,19 +6,19 @@ import { TeapotBufferGeometry } from './js/TeapotBufferGeometry.js';
 
 // Init variable
 var camera, scene, renderer, control, orbit;
-var mesh, texture;
-var raycaster, light, PointLightHelper, meshplan;
+var mesh, texture, floor, floorMesh;
+var raycaster, light;
 var type_material = 3;
-var color_material = 'rgb(255, 255, 255)';
 var material = new THREE.MeshBasicMaterial({ color: 0xffffff });
 material.needsUpdate = true;
-
 var mouse = new THREE.Vector2();
+var temp = 0;
 
 // Init point for LatheGeometry
 const points = [];
-for ( let i = 0; i < 10; i ++ ) {
-	points.push( new THREE.Vector2( Math.sin( i * 0.2 ) * 10 + 5, ( i - 5 ) * 2 ) );
+for (let i = 0; i < 10; i++) 
+{
+	points.push(new THREE.Vector2(Math.sin(i * 0.2) * 10 + 5, (i - 5) * 2));
 }
 
 // Geometry
@@ -38,7 +38,8 @@ var TorusKnotGeometry = new THREE.TorusKnotGeometry(10, 3, 100, 16);
 init();
 render();
 
-function init() {
+function init() 
+{
 	// Scene
 	scene = new THREE.Scene();
 	scene.background = new THREE.Color(0x343a40);
@@ -51,45 +52,78 @@ function init() {
 	camera.position.set(camera_x, camera_y, camera_z);
 	camera.lookAt(new THREE.Vector3(0, 0, 0));
 
-	// Grid
-    var size = 400;
-    var divisions = 50;
-    var gridHelper = new THREE.GridHelper(size, divisions, 0x888888);
-		scene.add(gridHelper);
+	// light
+	light = new THREE.PointLight('rgb(75,145,175)');
+	light.position.set(30, 60, 30);
+    light.castShadow = true;
+    scene.add(light);
+
+	// load the cube map
+	var cubemap_path = "/images/";
+	var cubemap_format = ".jpg";
+	var urls = [
+	  cubemap_path + "px" + cubemap_format,
+	  cubemap_path + "nx" + cubemap_format,
+	  cubemap_path + "py" + cubemap_format,
+	  cubemap_path + "ny" + cubemap_format,
+	  cubemap_path + "pz" + cubemap_format,
+	  cubemap_path + "nz" + cubemap_format,
+	];
+	var refection_cube = new THREE.CubeTextureLoader().load(urls);
+	refection_cube.format = THREE.RGBFormat;
+	scene.background = refection_cube;
+	
+	// Floor
+	floor = new THREE.PlaneBufferGeometry(200, 200, 32, 32);
+	var floorMat = new THREE.MeshStandardMaterial({side: THREE.DoubleSide});
+	var texture_loader = new THREE.TextureLoader();
+	floorMat.map = texture_loader.load("/images/floor.png");
+	floorMat.envMap = refection_cube;
+	floorMesh = new THREE.Mesh(floor, floorMat);
+	floorMesh.receiveShadow = true;
+	floorMesh.rotation.x = -Math.PI / 2.0;
+	floorMesh.name = "floor";
+	floorMesh.position.set(0, -25, 0);
+	scene.add(floorMesh);
 	
     // Renderer
     raycaster = new THREE.Raycaster();
     renderer = new THREE.WebGLRenderer({antialias: true})
     renderer.setSize( window.innerWidth, window.innerHeight )
     renderer.shadowMap.enabled = true;
-		renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-		document.getElementById("rendering").addEventListener('mousedown', onMouseDown, false);
-		document.getElementById("rendering").appendChild(renderer.domElement);
-		window.addEventListener('resize', () => {
-			var width = window.innerWidth
-			var height = window.innerHeight
-			renderer.setSize(width, height)
-			camera.aspect = width / height
-			camera.updateProjectionMatrix()
-			render()
-		})
-		orbit = new OrbitControls(camera, renderer.domElement);
-		orbit.update();
-		orbit.addEventListener('change', render);
-		control = new TransformControls(camera, renderer.domElement);
-		control.addEventListener('change', render);
-		control.addEventListener('dragging-changed', function (event) {
-			orbit.enabled = !event.value;
-		});
+	renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+	document.getElementById("rendering").addEventListener('mousedown', onMouseDown, false);
+	document.getElementById("rendering").appendChild(renderer.domElement);
+
+	window.addEventListener('resize', () => 
+	{
+		var width = window.innerWidth
+		var height = window.innerHeight
+		renderer.setSize(width, height)
+		camera.aspect = width / height
+		camera.updateProjectionMatrix()
+		render()
+	})
+
+	orbit = new OrbitControls(camera, renderer.domElement);
+	orbit.update();
+	orbit.addEventListener('change', render);
+	control = new TransformControls(camera, renderer.domElement);
+	control.addEventListener('change', render);
+	control.addEventListener('dragging-changed', function (event) 
+	{
+		orbit.enabled = !event.value;
+	});
 }
 
-function render() {
+function render() 
+{
 	renderer.render(scene, camera);
 }
 
-
 // 2 Các khối hình sẽ được vẽ theo Point/Lines/Solid
-function CloneMesh(dummy_mesh) {
+function CloneMesh(dummy_mesh) 
+{
 	mesh.name = dummy_mesh.name;
 	mesh.position.set(dummy_mesh.position.x, dummy_mesh.position.y, dummy_mesh.position.z);
 	mesh.rotation.set(dummy_mesh.rotation.x, dummy_mesh.rotation.y, dummy_mesh.rotation.z);
@@ -99,20 +133,64 @@ function CloneMesh(dummy_mesh) {
 	scene.add(mesh);
 	control.attach(mesh);
 	scene.add(control);
-}	
-function SetMaterial(mat, color) {
+}
+
+function SetMaterial(mat) 
+{
 	mesh = scene.getObjectByName("mesh1");
 	light = scene.getObjectByName("pl1");
-	if (mat != 0) {
+	if (mat != 0) 
+	{
 		type_material = mat;
 	}
-	
-	if (color) {
-	 	color_material = color;
+
+	if (mesh) 
+	{
+		const dummy_mesh = mesh.clone();
+		scene.remove(mesh);
+
+		switch (type_material) {
+			case 1:
+				material = new THREE.PointsMaterial({ size: 0.3 });
+				mesh = new THREE.Points(dummy_mesh.geometry, material);
+				CloneMesh(dummy_mesh);
+				temp = 1;
+				break;
+			case 2:
+				material = new THREE.MeshBasicMaterial({ wireframe: true });
+				mesh = new THREE.Mesh(dummy_mesh.geometry, material);
+				CloneMesh(dummy_mesh);
+				temp = 2;
+				break;
+			case 3:
+				if (!light)
+					material = new THREE.MeshBasicMaterial();
+				else
+				 	material = new THREE.MeshPhongMaterial();
+				mesh = new THREE.Mesh(dummy_mesh.geometry, material);
+				CloneMesh(dummy_mesh);
+				temp = 3;
+				break;
+		}
+		render();
 	}
+}
+window.SetMaterial = SetMaterial
 
+function SetColor() 
+{
+	mesh = scene.getObjectByName("mesh1");
+	light = scene.getObjectByName("pl1");
 
-	if (mesh) {
+	if (temp != 0) 
+	{
+		type_material = temp;
+	}
+	
+	var color_material = document.getElementById("colorpicker").value;
+
+	if (mesh) 
+	{
 		const dummy_mesh = mesh.clone();
 		scene.remove(mesh);
 
@@ -121,11 +199,13 @@ function SetMaterial(mat, color) {
 				material = new THREE.PointsMaterial({ color: color_material, size: 0.3 });
 				mesh = new THREE.Points(dummy_mesh.geometry, material);
 				CloneMesh(dummy_mesh);
+				temp = 1;
 				break;
 			case 2:
 				material = new THREE.MeshBasicMaterial({ color: color_material, wireframe: true });
 				mesh = new THREE.Mesh(dummy_mesh.geometry, material);
 				CloneMesh(dummy_mesh);
+				temp = 2;
 				break;
 			case 3:
 				if (!light)
@@ -134,27 +214,22 @@ function SetMaterial(mat, color) {
 				 	material = new THREE.MeshPhongMaterial({ color: mesh.material.color_material });
 				mesh = new THREE.Mesh(dummy_mesh.geometry, material);
 				CloneMesh(dummy_mesh);
-				break;
-			case 4:
-				if (!light)
-					material = new THREE.MeshBasicMaterial({ map: texture, transparent: true });
-				else
-					material = new THREE.MeshLambertMaterial({ map: texture, transparent: true });
-				mesh = new THREE.Mesh(dummy_mesh.geometry, material);
-				CloneMesh(dummy_mesh);
+				temp = 3;
 				break;
 		}
 		render();
 	}
 }
-window.SetMaterial = SetMaterial
+window.SetColor = SetColor
 
 // 1 Vẽ các khối hình
-function RenderGeo(id) {
+function RenderGeo(id) 
+{
 	mesh = scene.getObjectByName("mesh1");
 	scene.remove(mesh);
 
-	switch (id) {
+	switch (id) 
+	{
 		case 1:
 			mesh = new THREE.Mesh(BoxGeometry, material);
 			break;
@@ -191,35 +266,37 @@ function RenderGeo(id) {
 		case 12:
 			mesh = new THREE.Mesh(TorusKnotGeometry, material);
 			break;
-		
 	}
     mesh.name = "mesh1";
     mesh.castShadow = true;
-		mesh.receiveShadow = true;
-		scene.add(mesh);
-		control_transform(mesh);
-		render();
+	mesh.receiveShadow = true;
+	scene.add(mesh);
+	control_transform(mesh);
+	render();
 }
 window.RenderGeo = RenderGeo;
 
 
 
-// 3. Thực hiện chiếu phối cảnh, tăng giảm các toạ độ x,y,z near, far
-function setFOV(value) {
+// 3. Thực hiện chiếu phối cảnh; tăng giảm các toạ độ x,y,z; near, far
+function setFOV(value) 
+{
 	camera.fov = Number(value);
 	camera.updateProjectionMatrix();
 	render();
 }
 window.setFOV = setFOV;
 
-function setFar(value) {
+function setFar(value) 
+{
 	camera.far = Number(value);
 	camera.updateProjectionMatrix();
 	render();
 }
 window.setFar = setFar;
 
-function setNear(value) {
+function setNear(value) 
+{
 	camera.near = Number(value);
 	camera.updateProjectionMatrix();
 	render();
@@ -227,27 +304,33 @@ function setNear(value) {
 window.setNear = setNear;
 
 // 4. Affine
-function Translate() {
+function Translate() 
+{
 	control.setMode("translate");
 }
 window.Translate = Translate;
 
-function Rotate() {
+function Rotate() 
+{
 	control.setMode("rotate");
 }
 window.Rotate = Rotate;
 
-function Scale() {
+function Scale() 
+{
 	control.setMode("scale");
 }
 window.Scale = Scale;
 
 // Control onKeydown
-function control_transform(mesh) {
+function control_transform(mesh) 
+{
 	control.attach(mesh);
 	scene.add(control);
-	window.addEventListener('keydown', function (event) {
-		switch (event.keyCode) {
+	window.addEventListener('keydown', function (event) 
+	{
+		switch (event.keyCode) 
+		{
 			case 84: // T
 				Translate(); break;
 			case 82: // R
@@ -258,7 +341,8 @@ function control_transform(mesh) {
 	});
 }
 
-function onMouseDown(event) {
+function onMouseDown(event) 
+{
 	event.preventDefault();
 	mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
 	mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
@@ -266,15 +350,19 @@ function onMouseDown(event) {
 	raycaster.setFromCamera(mouse, camera);
 	var intersects = raycaster.intersectObjects(scene.children);
 	let check_obj = 0;
-	if (intersects.length > 0) {
+	if (intersects.length > 0) 
+	{
 		var obj;
-		for (obj in intersects) {
-			if (intersects[obj].object.name == "mesh1") {
+		for (obj in intersects) 
+		{
+			if (intersects[obj].object.name == "mesh1") 
+			{
 				check_obj = 1;
 				control_transform(intersects[obj].object);
 				break;
 			}
-			if (intersects[obj].object.type == "PointLightHelper") {
+			if (intersects[obj].object.type == "PointLightHelper") 
+			{
 				check_obj = 1;
 				control_transform(light);
 				break;
