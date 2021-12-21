@@ -53,7 +53,7 @@ function init()
 	camera.lookAt(new THREE.Vector3(0, 0, 0));
 
 	// light
-	light = new THREE.PointLight('rgb(75,145,175)');
+	light = new THREE.PointLight('rgb(255,255,255)');
 	light.position.set(30, 60, 30);
     light.castShadow = true;
     scene.add(light);
