@@ -10,7 +10,7 @@
 
 	<style type="text/css" >
 		.nav {display:block;}
-		.menu {background: #ffffffaf; height: 30px; width: 480px;}
+		.menu {background: #ffffffaf; height: 30px; width: 610px;}
 		.menu li{float: left; color: lightgreen; list-style:square; margin-right: 10px; margin-top: 5px; width: 100px;}
 		.menu li :hover {background: lightslategray;}
 		.menu li a{color: dimgray; font-size: 16px; font-weight: bold;}
@@ -60,13 +60,12 @@
 <body>
 	<div id='rendering'>
 		<nav style="position:fixed; height: 35px; margin-top: 10px; margin-left: 10px; text-align:left;">
-			<a style="font-size: 20px; font-weight: bold; color: dimgray; font-family: Arial;">-------- ĐỒ HỌA MÁY TÍNH - CS105.M11.KHCL --------</a>
+			<a style="font-size: 14px; font-weight: bold; color: dimgray; font-family: Arial;">CS105.M11.KHCL</a>
 			
-			<label for="colorpicker" style="color: dimgray; position: fixed; right: 160px; top:150px; font-family: 'Gill Sans MT'; font-weight: bold; font-style: unset;">Object Color:</label>
-   			<input type="color" id="colorpicker" value="#4b91af" style="position: fixed; right: 90px; top:145px;">
+		 	<button type="button" style="color: orangered; position: fixed; left: 650px; top:53px; font-family: 'Gill Sans MT'; font-weight: bold; font-style: unset; width: 50px; height: 30px;" onclick="Pause()">▌▌</button>
+			<button type="button" style="color: green; position: fixed; left: 710px; top:53px; font-family: 'Gill Sans MT'; font-weight: bold; font-style: unset; width: 50px; height: 30px;" onclick="Play()">▶</button>
+			<button type="button" style="color: blue; position: fixed; left: 770px; top:53px; font-family: 'Gill Sans MT'; font-weight: bold; font-style: unset; width: 50px; height: 30px;" onclick="Reset()">🔙</button>
 
-			<button type="button" style="color: dimgray; position: fixed; right: 20px; top:150px; font-family: 'Gill Sans MT'; font-weight: bold; font-style: unset;" onclick="SetColor()">Apply</button>
-			
 			<div class="menu">
 				<ul>
 					<li>
@@ -112,6 +111,17 @@
 							<li><a>|| Texture5</a></li>
 						</ul>
 					</li>
+					<li>
+						<a style="color: darkslategray; font-weight: bold; font-family: 'Gill Sans MT';">ANIMATION</a>
+						<ul>
+							<li><a onclick="Animate_1()">|| Rotate x</a></li>
+							<li><a onclick="Animate_2()">|| Rotate y</a></li>
+							<li><a onclick="Animate_3()">|| Rotate xy</a></li>
+							<li><a onclick="Animate_6()">|| Rotate xyz</a></li>
+							<li><a onclick="Animate_4()">|| Custom 1</a></li>
+							<li><a onclick="Animate_5()">|| Custom 2</a></li>
+						</ul>
+					</li>
 				</ul>
 			</div>
 		</nav>
@@ -119,15 +129,24 @@
 
 	<div id="content">
 		<nav style="position:fixed; height: 35px; margin-top: 10px; margin-left: 10px; text-align:left;">
-			<label style="color: dimgray; position: fixed; right: 100px; top:20px; font-family: 'Gill Sans MT'; font-weight: bold; font-style: unset;">CONTROL PANNEL</label>
-			<label style="color: dimgray; position: fixed; left: 1300px; top:50px; font-family: 'Gill Sans MT'; font-weight: bold; font-style: unset;">- FOV :</label>
-			<label style="color: dimgray; position: fixed; left: 1300px; top:80px; font-family: 'Gill Sans MT'; font-weight: bold; font-style: unset;">- Near:</label>
-			<label style="color: dimgray; position: fixed; left: 1300px; top:110px; font-family: 'Gill Sans MT'; font-weight: bold; font-style: unset;">- Far :</label>
+
+			<label style="color: dimgray; position: fixed; left: 1250px; top:20px; font-family: 'Gill Sans MT'; font-weight: bold; font-style: unset;">CONTROL PANNEL</label>
+			<label style="color: dimgray; position: fixed; left: 1250px; top:50px; font-family: 'Gill Sans MT'; font-style: unset;">- FOV :</label>
+			<label style="color: dimgray; position: fixed; left: 1250px; top:80px; font-family: 'Gill Sans MT'; font-style: unset;">- Near:</label>
+			<label style="color: dimgray; position: fixed; left: 1250px; top:110px; font-family: 'Gill Sans MT'; font-style: unset;">- Far :</label>
 			<div>
-				<input type="range" id="customFOV" min="0" max="150" value="75" style="position: fixed; right: 20px; top:50px;">
-				<input type="range" id="customNear" min="70" max="250" value="70" style="position: fixed; right: 20px; top:80px;">
-				<input type="range" id="customFar" min="70" max="250" value="250" style="position: fixed; right: 20px; top:110px;">
+				<input type="range" id="customFOV" min="0" max="150" value="75" style="position: fixed; right: 40px; top:50px;">
+				<input type="range" id="customNear" min="70" max="250" value="70" style="position: fixed; right: 40px; top:80px;">
+				<input type="range" id="customFar" min="70" max="250" value="250" style="position: fixed; right: 40px; top:110px;">
 			</div>
+
+			<label for="colorpicker1" style="color: dimgray; position: fixed; left:1250px; top:160px; font-family: 'Gill Sans MT'; font-style: unset;">- Object Color:</label>
+   			<input type="color" id="colorpicker1" value="#ffffff" style="position: fixed; right: 90px; top:150px; width: 70px;">
+			<button type="button" style="color: dimgray; position: fixed; right: 43px; top:154px; font-family: 'Gill Sans MT'; font-weight: bold; font-style: unset; color: limegreen;" onclick="SetColor()">✔</button>
+			
+			<label for="colorpicker2" style="color: dimgray; position: fixed; left:1250px; top:210px; font-family: 'Gill Sans MT'; font-style: unset;">- Light Color:</label>
+			<input type="color" id="colorpicker2" value="#ffffff" style="position: fixed; right: 90px; top:200px; width: 70px;">
+		 	<button type="button" style="color: dimgray; position: fixed; right: 43px; top:203px; font-family: 'Gill Sans MT'; font-weight: bold; font-style: unset; color: limegreen;" onclick="SetLight()">✔</button>
 		</nav>
 	</div>
 	

@@ -54,7 +54,7 @@ function init()
 
 	// light
 	light = new THREE.PointLight('rgb(255,255,255)');
-	light.position.set(30, 60, 30);
+	light.position.set(45, 75, 45);
     light.castShadow = true;
     scene.add(light);
 
@@ -75,14 +75,13 @@ function init()
 	
 	// Floor
 	floor = new THREE.PlaneBufferGeometry(200, 200, 32, 32);
-	var floorMat = new THREE.MeshStandardMaterial({side: THREE.DoubleSide});
+	var floorMat = new THREE.MeshPhongMaterial({side: THREE.DoubleSide});
 	var texture_loader = new THREE.TextureLoader();
 	floorMat.map = texture_loader.load("/images/floor.png");
 	floorMat.envMap = refection_cube;
 	floorMesh = new THREE.Mesh(floor, floorMat);
 	floorMesh.receiveShadow = true;
 	floorMesh.rotation.x = -Math.PI / 2.0;
-	floorMesh.name = "floor";
 	floorMesh.position.set(0, -25, 0);
 	scene.add(floorMesh);
 	
@@ -138,12 +137,13 @@ function CloneMesh(dummy_mesh)
 function SetMaterial(mat) 
 {
 	mesh = scene.getObjectByName("mesh1");
-	light = scene.getObjectByName("pl1");
+	temp = mat;
+	
 	if (mat != 0) 
 	{
 		type_material = mat;
 	}
-	temp = mat;
+	
 	if (mesh) 
 	{
 		const dummy_mesh = mesh.clone();
@@ -152,7 +152,7 @@ function SetMaterial(mat)
 		switch (type_material) 
 		{
 			case 1:
-				material = new THREE.PointsMaterial({ size: 0.3 });
+				material = new THREE.PointsMaterial({ size: 0.4});
 				mesh = new THREE.Points(dummy_mesh.geometry, material);
 				CloneMesh(dummy_mesh);
 				break;
@@ -174,50 +174,80 @@ window.SetMaterial = SetMaterial
 
 function SetColor() 
 {
-	mesh = scene.getObjectByName("mesh1");
-	light = scene.getObjectByName("pl1");
-	
-	if (temp != 0) 
+	if (temp_id == 0)
 	{
-		type_material = temp;
+		alert("Choose an object !")
 	}
-	
-	var color_material = document.getElementById("colorpicker").value;
-
-	if (mesh) 
+	else
 	{
-		const dummy_mesh = mesh.clone();
-		scene.remove(mesh);
+		mesh = scene.getObjectByName("mesh1");
 
-		switch (type_material) 
+		if (temp != 0) 
 		{
-			case 1:
-				material = new THREE.PointsMaterial({ color: color_material, size: 0.3 });
-				mesh = new THREE.Points(dummy_mesh.geometry, material);
-				CloneMesh(dummy_mesh);
-				break;
-			case 2:
-				material = new THREE.MeshPhongMaterial({ color: color_material, wireframe: true });
-				mesh = new THREE.Mesh(dummy_mesh.geometry, material);
-				CloneMesh(dummy_mesh);
-				break;
-			case 3:
-				material = new THREE.MeshPhongMaterial({ color: mesh.material.color_material });
-				mesh = new THREE.Mesh(dummy_mesh.geometry, material);
-				CloneMesh(dummy_mesh);
-				break;
+			type_material = temp;
 		}
-		render();
-	}
+
+		var color_material = document.getElementById("colorpicker1").value;
+
+		if (mesh) 
+		{
+			const dummy_mesh = mesh.clone();
+			scene.remove(mesh);
+
+			switch (type_material) 
+			{
+				case 1:
+					material = new THREE.PointsMaterial({ color: color_material, size: 0.4 });
+					mesh = new THREE.Points(dummy_mesh.geometry, material);
+					CloneMesh(dummy_mesh);
+					break;
+				case 2:
+					material = new THREE.MeshPhongMaterial({ color: color_material, wireframe: true });
+					mesh = new THREE.Mesh(dummy_mesh.geometry, material);
+					CloneMesh(dummy_mesh);
+					break;
+				case 3:
+					material = new THREE.MeshPhongMaterial({ color: color_material  });
+					mesh = new THREE.Mesh(dummy_mesh.geometry, material);
+					CloneMesh(dummy_mesh);
+					break;
+			}
+			render();
+		}
+    }
 }
 window.SetColor = SetColor
 
+function SetLight()
+{
+	scene.remove(light);
+
+	var color_material = document.getElementById("colorpicker2").value;
+	
+	light = new THREE.PointLight(color_material);
+	light.position.set(45, 75, 45);
+    light.castShadow = true;
+    scene.add(light);
+	render();
+}
+window.SetLight = SetLight
+
 // 1 Vẽ các khối hình
+var temp_id = 0;
 function RenderGeo(id) 
 {
+	cancelAnimationFrame(animate1);
+	cancelAnimationFrame(animate2);
+	cancelAnimationFrame(animate3);
+	cancelAnimationFrame(animate4);
+	cancelAnimationFrame(animate5);
+	cancelAnimationFrame(animate6);
+	animation_cur = 0;
+
 	mesh = scene.getObjectByName("mesh1");
 	scene.remove(mesh);
 	material = new THREE.MeshPhongMaterial();
+	temp_id = id;
 	switch (id) 
 	{
 		case 1:
@@ -322,11 +352,14 @@ function control_transform(mesh)
 		switch (event.keyCode) 
 		{
 			case 84: // T
-				Translate(); break;
+				Translate(); 
+				break;
 			case 82: // R
-				Rotate(); break;
+				Rotate(); 
+				break;
 			case 83: // S
-				Scale(); break;
+				Scale(); 
+				break;
 		}
 	});
 }
@@ -362,3 +395,184 @@ function onMouseDown(event)
 	if (check_obj == 0 && control.dragging == 0) control.detach();
 	render();
 }
+
+// Animation
+function cancel_all()
+{
+	cancelAnimationFrame(animate1);
+	cancelAnimationFrame(animate2);
+	cancelAnimationFrame(animate3);
+	cancelAnimationFrame(animate4);
+	cancelAnimationFrame(animate5);
+	cancelAnimationFrame(animate6);
+}
+window.cancel_all = cancel_all;
+
+var mesh = new THREE.Mesh();
+var animate1, animate2, animate3, animate4, animate5, animate6;
+var animation_cur = 0;
+function Animate_1() 
+{
+	cancel_all();
+	mesh.rotation.x += 0.01;
+	render();
+	animate1 = requestAnimationFrame(Animate_1);
+	animation_cur = 1;
+}
+window.Animate_1 = Animate_1;
+
+function Animate_2() 
+{
+	cancel_all();
+	mesh.rotation.y += 0.01;
+	render();
+	animate2 = requestAnimationFrame(Animate_2);
+	animation_cur = 2;
+}
+window.Animate_2 = Animate_2;
+
+function Animate_3() 
+{
+	cancel_all();
+	mesh.rotation.x += 0.01;
+	mesh.rotation.y += 0.01;
+	render();
+	animate3 = requestAnimationFrame(Animate_3);
+	animation_cur = 3;
+}
+window.Animate_3 = Animate_3;
+
+function Animate_4() 
+{
+	cancel_all();
+	mesh.rotation.x += 0.01;
+	mesh.rotation.y += 0.01;
+	mesh.rotation.z += 0.01;
+	render();
+	animate4 = requestAnimationFrame(Animate_4);
+	animation_cur = 4;
+}
+window.Animate_4 = Animate_4;
+
+const position_x = mesh.position.x;
+const position_y = mesh.position.y;
+var check = 0;
+function Animate_5() 
+{
+	cancel_all();
+	var positionx = mesh.position.x;
+	var positiony = mesh.position.y;
+	if (positiony < position_y + 30 && check == 0)
+	{
+		mesh.position.y += 0.3;
+	}
+	if (positiony > position_y + 30 && positionx < position_x + 30) 
+	{
+		mesh.position.x += 0.3;
+	}
+	if (positiony > position_y + 30 && positionx > position_x + 30) check += 1;
+	if (check > 1 && positiony > position_y)
+	{
+		mesh.position.y -= 0.3;
+	}
+	if (check > 1 && positiony < position_y && positionx > position_x)
+	{
+		mesh.position.x -= 0.3;
+	}
+	if (positiony < position_y && positionx < position_x) check = 0;
+	mesh.rotation.y += 0.01;
+	render();
+	animate5 = requestAnimationFrame(Animate_5);
+	animation_cur = 5;
+}
+window.Animate_5 = Animate_5;
+
+var check2 = 0;
+function Animate_6() 
+{
+	cancel_all();
+	var positiony = mesh.position.y;
+	if (positiony < position_y + 30 && check2 == 0) 
+	{ 
+		mesh.position.y += 0.3;
+		mesh.rotation.y += 0.05;
+	}
+	if (positiony > position_y + 30) check2 += 1;
+	if (check2 > 1 && positiony > position_y) 
+	{ 
+		mesh.position.y -= 0.3;
+		mesh.rotation.y += 0.05;
+	}
+	if (positiony < position_y) check2 = 0;
+	render();
+	animate6 = requestAnimationFrame(Animate_6);
+	animation_cur = 6;
+}
+window.Animate_6 = Animate_6;
+
+function Pause() 
+{
+	switch (animation_cur)
+	{
+		case 0:
+			alert("Animation is off !");
+			break;
+		case 1:
+			cancelAnimationFrame(animate1);
+			break;
+		case 2:
+			cancelAnimationFrame(animate2);
+			break;
+		case 3:
+			cancelAnimationFrame(animate3);
+			break;
+		case 4:
+			cancelAnimationFrame(animate4);
+			break;
+		case 5:
+			cancelAnimationFrame(animate5);
+			break;
+		case 6:
+			cancelAnimationFrame(animate6);
+			break;
+	}
+}
+window.Pause = Pause;
+
+function Play() 
+{
+	switch (animation_cur)
+	{
+		case 0:
+			alert("Animation is off !");
+			break;
+		case 1:
+			Animate_1();
+			break;
+		case 2:
+			Animate_2();
+			break;
+		case 3:
+			Animate_3();
+			break;
+		case 4:
+			Animate_4();
+			break;
+		case 5:
+			Animate_5();
+			break;
+		case 6:
+			Animate_6();
+			break;
+	}
+}
+window.Play = Play;
+
+function Reset() 
+{
+	animation_cur = 0;
+	cancel_all();
+	RenderGeo(temp_id);
+	SetColor();
+}
+window.Reset = Reset;
