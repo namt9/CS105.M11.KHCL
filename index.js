@@ -576,3 +576,67 @@ function Reset()
 	SetColor();
 }
 window.Reset = Reset;
+
+function Texture(mat) 
+{
+	mesh = scene.getObjectByName("mesh1");
+
+	var loader = new THREE.TextureLoader();
+
+	if (mesh) 
+	{
+		const dummy_mesh = mesh.clone();
+		scene.remove(mesh);
+
+		switch (mat) 
+		{
+			case 1:
+				material = new THREE.MeshPhongMaterial({
+
+                    map: loader.load("./images/texture1.jpg"),
+
+                });
+				mesh = new THREE.Mesh(dummy_mesh.geometry, material);
+				CloneMesh(dummy_mesh);
+				break;
+			case 2:
+				material = new THREE.MeshPhongMaterial({
+
+                    map: loader.load("./images/texture2.jpg"),
+
+                });
+				mesh = new THREE.Mesh(dummy_mesh.geometry, material);
+				CloneMesh(dummy_mesh);
+				break;
+			case 3:
+				material = new THREE.MeshPhongMaterial({
+
+                    map: loader.load("./images/texture3.jpg"),
+
+                });
+				mesh = new THREE.Mesh(dummy_mesh.geometry, material);
+				CloneMesh(dummy_mesh);
+				break;
+			case 4:
+				material = new THREE.MeshPhongMaterial({
+
+					map: loader.load("./images/texture4.jpg"),
+
+				});
+				mesh = new THREE.Mesh(dummy_mesh.geometry, material);
+				CloneMesh(dummy_mesh);
+				break;
+			case 5:
+				material = new THREE.MeshPhongMaterial({
+
+					map: loader.load("./images/texture5.jpg"),
+
+				});
+				mesh = new THREE.Mesh(dummy_mesh.geometry, material);
+				CloneMesh(dummy_mesh);
+				break;
+		}
+		render();
+	}
+}
+window.Texture = Texture
