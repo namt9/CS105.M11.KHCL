@@ -20,4 +20,4 @@ Chọn file index.html và nhấn “Go Live” ở phía dưới góc pha�
 
 _______________Cách 2: 
 
-Mở trực tiếp link sau: https://hinhhoc3d.herokuapp.com/index.html?fbclid=IwAR1GnUv5GGgqxoD1s887lFPpviyFZsx5g0AIpe3Vj-kG4E8S9C5HflDaCg4
+Mở trực tiếp link sau: https://hinhhoc3d.herokuapp.com/index.html
